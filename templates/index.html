@@ -31,9 +31,9 @@
   <body>
     <header>
       <!-- Fixed navbar -->
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark py-2">
         <div class="container-fluid">
-          <a class="navbar-brand" href="#">DonskyTech</a>
+          <a class="navbar-brand" href="#">SGG01.U3.001</a>
           <button
             class="navbar-toggler"
             type="button"
@@ -46,79 +46,53 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
-            <ul class="navbar-nav me-auto mb-2 mb-md-0">
-              <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="#">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
-              </li>
-            </ul>
+            <!-- Removed Home & About -->
           </div>
         </div>
       </nav>
     </header>
-    <div class="container-fluid content mt-5">
+
+    <div class="container-fluid content px-4">
       <div class="row">
-        <nav
-          id="sidebarMenu"
-          class="col-md-3 col-lg-2 d-md-block sidebar collapse"
-        >
-          <div class="sidebar position-sticky pt-3 sidebar-sticky">
-            <ul class="nav flex-column">
-              <li class="nav-item">
-                <a
-                  class="nav-link active link-danger"
-                  aria-current="page"
-                  href="#"
-                >
-                  <span class="material-symbols-outlined"> dashboard </span>
-                  Dashboard
-                </a>
-              </li>
-            </ul>
-          </div>
-        </nav>
-        <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+        <div class="col-md-10 col-lg-11 px-md-4">
           <div class="row">
             <div
               class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom border-danger"
             >
-              <h1 class="h2 text-danger">DHT22 Weather Station Dashboard</h1>
+              <h1 class="h2 mt-2" style="color: #4e6c63;">Tunnel U3 Temperature Measurement</h1>
               <div class="row"></div>
             </div>
           </div>
+
           <div class="row">
-            <div
-              class="d-flex p-2 justify-content-evenly overview-boxes justify-content-center"
-            >
-              <div
-                class="box d-flex align-items-center justify-content-center rounded-3 p-1 shadow"
-              >
-                <div class="right-side">
+            <div class="d-flex p-2 justify-content-evenly overview-boxes justify-content-center">
+              <!-- Temperature Widget -->
+              <div class="box widget-box d-flex align-items-center justify-content-center rounded-3 p-1 shadow">
+                <div class="right-side text-white">
                   <div class="box-topic">Temperature</div>
                   <div class="number" id="temperature">35 C</div>
                 </div>
-                <span class="indicator material-symbols-outlined"
-                  >device_thermostat</span
-                >
+                <span class="indicator material-symbols-outlined text-white">
+                  device_thermostat
+                </span>
               </div>
-              <div
-                class="box d-flex align-items-center justify-content-center rounded-3 p-1 shadow"
-              >
-                <div class="right-side">
+
+              <!-- Humidity Widget -->
+              <div class="box widget-box d-flex align-items-center justify-content-center rounded-3 p-1 shadow">
+                <div class="right-side text-white">
                   <div class="box-topic">Humidity</div>
                   <div class="number" id="humidity">40%</div>
                 </div>
-                <span class="indicator material-symbols-outlined">
+                <span class="indicator material-symbols-outlined text-white">
                   humidity_percentage
                 </span>
               </div>
             </div>
           </div>
+
           <div class="row">
             <div class="col-md-12 col-lg-8 bg-white">
-              <div class="p-3 border-top border-3 border-danger">
+              <div class="pt-2 px-3 border-top border-3 border-danger">
                 <div class="row mt-3 gx-5">
                   <div class="col-md-12 col-lg-6 history-divs">
                     <div id="temperature-history"></div>
@@ -129,17 +103,12 @@
                 </div>
               </div>
             </div>
-            <div
-              class="col-md-12 col-lg-4 d-flex flex-column align-items-center"
-            >
-              <div
-                class="row p-3 bg-light border-top border-3 border-danger bg-white"
-              >
+
+            <div class="col-md-12 col-lg-4 d-flex flex-column align-items-center">
+              <div class="row p-3 bg-light border-top border-3 border-danger bg-white">
                 <div id="temperature-gauge"></div>
               </div>
-              <div
-                class="row p-3 bg-light border-top border-3 border-danger mt-4 bg-white"
-              >
+              <div class="row p-3 bg-light border-top border-3 border-danger mt-4 bg-white">
                 <div id="humidity-gauge" class=""></div>
               </div>
             </div>
@@ -147,11 +116,13 @@
         </div>
       </div>
     </div>
+
     <footer class="footer mt-auto py-3 bg-dark">
       <div class="container text-center">
-        <span class="text-white">&copy;2023 www.donskytech.com</span>
+        <span class="text-white">&copy;2025 DMI University of Basel</span>
       </div>
     </footer>
+
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"

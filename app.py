@@ -22,7 +22,7 @@ else:
     class MockDHT22Module:
         def get_sensor_readings(self):
             # Return some fake readings for dev/test
-            return 66.5, 66.5
+            return 33.5, 50.5
 
     dht22_module = MockDHT22Module()
 
