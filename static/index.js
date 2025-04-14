@@ -32,12 +32,13 @@ var temperatureLayout = {
   },
   font: {
     size: 14,
-    color: "#7f7f7f",
+    color: "#000",
   },
   colorway: ["#B22222"],
   //   width: 450,
   //   height: 260,
-  margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
+//  margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
+  margin: { t: 30, b: 30, l: 50, r: 20, pad: 0 },
 };
 var humidityLayout = {
   autosize: true,
@@ -51,7 +52,8 @@ var humidityLayout = {
   colorway: ["#00008B"],
   //   width: 450,
   //   height: 260,
-  margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
+//  margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
+  margin: { t: 30, b: 30, l: 50, r: 20, pad: 0 },
 };
 var config = { responsive: true };
 
@@ -68,6 +70,7 @@ Plotly.newPlot(
   graphConfig
 );
 
+
 // Gauge Data
 var temperatureData = [
   {
@@ -82,6 +85,8 @@ var temperatureData = [
       steps: [
         { range: [0, 20], color: "lightgray" },
         { range: [20, 30], color: "gray" },
+        { range: [30, 40], color: "orange" },
+        { range: [40, 50], color: "red" },
       ],
       threshold: {
         line: { color: "red", width: 4 },
@@ -103,19 +108,22 @@ var humidityData = [
     gauge: {
       axis: { range: [null, 100] },
       steps: [
-        { range: [0, 20], color: "lightgray" },
-        { range: [20, 30], color: "gray" },
+        { range: [0, 20], color: "yellow" },
+        { range: [20, 30], color: "lightgray" },
+        { range: [30, 70], color: "gray" },
+        { range: [60, 80], color: "orange" },
+        { range: [80, 100], color: "red" },
       ],
       threshold: {
         line: { color: "red", width: 4 },
         thickness: 0.75,
-        value: 30,
+        value: 40,
       },
     },
   },
 ];
 
-var layout = { width: 350, height: 250, margin: { t: 0, b: 0, l: 0, r: 0 } };
+var layout = { width: 350, height: 250, paper_bgcolor: '#a5d8d3', plot_bgcolor: '#a5d8d3',  margin: { t: 0, b: 0, l: 0, r: 0 } };
 
 Plotly.newPlot(temperatureGaugeDiv, temperatureData, layout, graphConfig);
 Plotly.newPlot(humidityGaugeDiv, humidityData, layout, graphConfig);
