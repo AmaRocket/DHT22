@@ -15,7 +15,7 @@ body {
 /* Let content grow */
 .content {
   flex: 1 0 auto;
-  padding-top: 70px;
+  padding-top: 3px;
   padding-bottom: 2rem;
 }
 
@@ -32,7 +32,7 @@ body {
 .box {
   background: #4e6c63;
   width: calc(100% / 2 - 20px);
-  color: #fff;
+  color: #a5d8d3;
   margin: 10px;
 }
 .box .box-topic {
@@ -54,5 +54,26 @@ body {
   min-width: 200px;
 }
 .bg-white {
-  background-color: #fff;
+  background-color: #a5d8d3 !important;
+}
+
+.chart-container {
+  width: 100%;
+  padding-left: 20px;
+  box-sizing: border-box;
+  background-color: #a5d8d3;
+}
+
+#temperature-history,
+#humidity-history {
+  width: 100%;
+  height: 230px; /* Match the visual height of gauges */
+  margin-bottom: 20px; /* Space between graphs */
+}
+
+@media (min-width: 992px) {
+  #temperature-history,
+  #humidity-history {
+    height: 230px;
+  }
 }
