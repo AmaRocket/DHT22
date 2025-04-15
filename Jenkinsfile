@@ -31,7 +31,7 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no \$USER@\${RPI_HOST} '
                             set -e # Stop if anything goes wrong
                             echo Connection Successful!
-                            cd \$APP_PATH || { echo "Path does not exist: \$APP_PATH"; exit 1; }
+                            cd /home/localadmin/DHT22/DHT22
                             git stash
                             echo "Pulling latest code..."
                             git pull
