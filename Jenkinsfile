@@ -13,7 +13,7 @@ pipeline {
                 script {
                     sshagent(['rpi2_ssh_credentials']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no \$MAAS_USER@\${REGION_CONTROLLER_IP} '
+                        ssh -o StrictHostKeyChecking=no \$MAAS_USER@\${RPI_HOST} '
                             set -e # Stop if anything goes wrong
                             echo Connection Successful!
                             '
