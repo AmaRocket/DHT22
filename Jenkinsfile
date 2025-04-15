@@ -3,26 +3,11 @@ pipeline {
 
     environment {
         RPI_HOST = "131.152.55.25"
-        MAAS_USER = credentials('maas_user')
+        MAAS_USER = "localadmin"
         SSH_KEY = credentials('rpi_ssh_key')
     }
 
     stages {
-        stage('Clone Repository') {
-            steps {
-                dir('/var/lib/jenkins/workspace/DHT22/') {
-                    script {
-                        if (fileExists('.git')) {
-                            sh 'git stash || true'
-                            sh 'git pull origin main'
-                        } else {
-                            git branch: 'main', url: 'https://github.com/AmaRocket/DHT22.git'
-                        }
-                    }
-                }
-            }
-        }
-
         stage('Connect via SSH') {
             steps {
                 script {
