@@ -79,7 +79,7 @@ var temperatureData = [
     title: { text: "Temperature" },
     type: "indicator",
     mode: "gauge+number+delta",
-    delta: { reference: 30 },
+    delta: { reference: 25 },
     gauge: {
       axis: { range: [null, 50] },
       steps: [
@@ -117,7 +117,7 @@ var humidityData = [
       threshold: {
         line: { color: "red", width: 4 },
         thickness: 0.75,
-        value: 40,
+        value: 50,
       },
     },
   },
