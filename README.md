@@ -1,7 +1,8 @@
 **Raspberry Pi DHT22 Temperature measurement station Flask SocketIO)**
 
-![dashboard.png](static/images/dashboard.png)![img_1.png](img_1.png)
-This fork of [dht22-weather-station-python-flask-socketio](https://github.com/donskytech/dht22-weather-station-python-flask-socketio.git)
+![dashboard.png](static/images/dashboard.png)
+
+This repo is fork of [dht22-weather-station-python-flask-socketio](https://github.com/donskytech/dht22-weather-station-python-flask-socketio.git)
  
 **Features**
 
