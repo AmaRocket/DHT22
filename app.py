@@ -1,21 +1,18 @@
 import json
+import platform
+from datetime import datetime
+from random import random
+from threading import Lock
+
 import flask_socketio as flask_socketio
 from flask import Flask, render_template, request
 from flask_socketio import SocketIO
-from random import random
-from threading import Lock
-from datetime import datetime
-
-
-#from dht22_module import DHT22Module
-#import board
-#dht22_module = DHT22Module(board.D18)
-
-import platform
 
 if platform.system() == "Linux":
-    from dht22_module import DHT22Module
     import board
+
+    from dht22_module import DHT22Module
+
     dht22_module = DHT22Module(board.D18)
 else:
     # Mock for local dev on Mac
@@ -85,3 +82,7 @@ Decorator for disconnect
 @socketio.on("disconnect")
 def disconnect():
     print("Client disconnected", request.sid)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
