@@ -13,8 +13,7 @@ This repo is fork of [dht22-weather-station-python-flask-socketio](https://githu
 
 
 **Connection:**
-
-![sensor connection.png](static/images/sensor%20connection.png)
+![dht22_connection.png](static/images/dht22_connection.png)
 
 **Setup Instructions**
 
