@@ -14,12 +14,9 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no \$MAAS_USER@\${RPI_HOST} '
                             set -e # Stop if anything goes wrong
                             echo Connection Successful!
-                            '
-                        """
-                        echo ""
-                            sh '''
                             exit
-                            '''
+                            '
+
                     }
                 }
             }
