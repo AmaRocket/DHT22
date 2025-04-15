@@ -11,10 +11,7 @@ pipeline {
                 script {
                     sshagent(['rpi2_ssh_credentials']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no ${RPI_HOST} '
-                            set -e # Stop if anything goes wrong
-                            echo Connection Successful!
-                            '
+                        ssh -o StrictHostKeyChecking=no ${RPI_HOST} "set -e; echo Connection Successful!"
                         """
                     }
                 }
