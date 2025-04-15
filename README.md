@@ -40,3 +40,10 @@ flask run --host=0.0.0.0
 ```
 http://<IP>:5000
 ```
+PS
+
+**Enable WakeOnLan if needed**
+````
+sudo chmod +x enable_wol.sh
+sudo ./enable_wol.sh
+````
