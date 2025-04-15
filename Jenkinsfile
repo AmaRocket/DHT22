@@ -16,13 +16,9 @@ pipeline {
                             echo Connection Successful!
                             '
                         """
-                        echo "Checking if port 5000 is free..."
+                        echo ""
                             sh '''
-                            PORT=5000
-                            if netstat -tuln | grep -q ":$PORT "; then
-                                echo "Port $PORT is already in use. Stopping process..."
-                                fuser -k $PORT/tcp || true
-                            fi
+                            exit
                             '''
                     }
                 }
