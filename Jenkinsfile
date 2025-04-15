@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        RPI_HOST = "131.152.55.25"
+        RPI_HOST = "10.34.64.17"
     }
 
     stages {
