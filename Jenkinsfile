@@ -3,8 +3,6 @@ pipeline {
 
     environment {
         RPI_HOST = "131.152.55.25"
-        MAAS_USER = "localadmin"
-        SSH_KEY = credentials('rpi2_ssh_credentials')
     }
 
     stages {
