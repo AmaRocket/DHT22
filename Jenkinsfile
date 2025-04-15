@@ -33,7 +33,7 @@ pipeline {
                             echo Connection Successful!
                             cd \$APP_PATH
                             echo "Pulling latest code..."
-                            sudo git pull
+                            git pull
 
                             echo "Checking if port 5000 is in use..."
                             PID=\$(sudo lsof -ti:5000)
