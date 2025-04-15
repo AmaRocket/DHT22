@@ -14,10 +14,11 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no ${RPI_HOST} '
                             set -e # Stop if anything goes wrong
                             echo Connection Successful!
-                            ll ~/DHT22/DHT22
-                            exit
                             '
                         """
+                        sh '''
+                            exit
+                        '''
                     }
                 }
             }
