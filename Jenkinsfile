@@ -4,6 +4,7 @@ pipeline {
     environment {
         RPI_HOST = credentials("rpi_ip")
         USER = credentials("admin_username")
+        APP_PATH = credentials("rpi_app_path")
     }
 
     stages {
@@ -30,6 +31,23 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no \$USER@\${RPI_HOST} '
                             set -e # Stop if anything goes wrong
                             echo Connection Successful!
+                            cd \$APP_PATH
+                            echo "Pulling latest code..."
+                            sudo git pull
+
+                            echo "Checking if port 5000 is in use..."
+                            PID=\$(sudo lsof -ti:5000)
+
+                            if [ ! -z "\$PID" ]; then
+                                echo "Killing process \$PID using port 5000"
+                                sudo kill -9 \$PID
+                                sleep 2
+                            fi
+
+                            echo "Starting Flask app..."
+                            nohup python3 app.py > flask.log 2>&1 &
+
+                            echo "Deployment finished!"
                             '
                         """
                         sh '''
