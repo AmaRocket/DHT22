@@ -2,7 +2,6 @@ pipeline {
     agent any
 
     environment {
-        RPI_USER = "localadmin"
         RPI_HOST = "131.152.55.25"
     }
 
@@ -12,7 +11,12 @@ pipeline {
                 script {
                     sshagent(['rpi2_ssh_credentials']) {
                         sh """
-                        ssh -o StrictHostKeyChecking=no ${RPI_USER}@${RPI_HOST} "set -e; neofetch"
+                        ssh -o StrictHostKeyChecking=no ${RPI_HOST} '
+                            set -e # Stop if anything goes wrong
+                            echo Connection Successful!
+                            ll ~/DHT22/DHT22
+                            exit
+                            '
                         """
                     }
                 }
