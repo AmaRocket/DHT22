@@ -36,10 +36,11 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Prometheus metrics
 temperature_gauge = Gauge(
     "tunnel_temperature_celsius",
-    "Temperature in Celsius in the tunnel"
+    "Temperature in Celsius in the tunnel",
+    ["tunnel"],
 )
 humidity_gauge = Gauge(
-    "tunnel_humidity_percent", "Humidity percentage in the tunnel"
+    "tunnel_humidity_percent", "Humidity percentage in the tunnel", ["tunnel"]
 )
 
 
@@ -85,6 +86,8 @@ Prometheus metrics endpoint
 
 @app.route("/metrics")
 def metrics():
+    temperature_gauge.labels(tunnel="U3").set(25)
+    humidity_gauge.labels(tunnel="U3").set(45)
     return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
 
