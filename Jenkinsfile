@@ -37,7 +37,7 @@ pipeline {
 
                             # Check if the systemd service is running and restart it if necessary
                             echo "Restarting DHT22 app via systemd..."
-                            sudo systemctl restart dht22-app.service
+                            sudo systemctl restart temp-app.service
 
                             echo "Deployment finished!"
                             '
