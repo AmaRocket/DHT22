@@ -104,7 +104,7 @@ var humidityData = [
     title: { text: "Humidity" },
     type: "indicator",
     mode: "gauge+number+delta",
-    delta: { reference: 50 },
+    delta: { reference: 45 },
     gauge: {
       axis: { range: [null, 100] },
       steps: [
@@ -117,7 +117,7 @@ var humidityData = [
       threshold: {
         line: { color: "red", width: 4 },
         thickness: 0.75,
-        value: 50,
+        value: 45,
       },
     },
   },

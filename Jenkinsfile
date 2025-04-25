@@ -35,17 +35,9 @@ pipeline {
                             echo "Pulling latest code..."
                             git pull
 
-                            echo "Checking if port 5000 is in use..."
-                            PID=\$(sudo lsof -ti:5000)
-
-                            if [ ! -z "\$PID" ]; then
-                                echo "Killing process \$PID using port 5000"
-                                sudo kill -9 \$PID
-                                sleep 2
-                            fi
-
-                            echo "Starting Flask app..."
-                            nohup python3 app.py > flask.log 2>&1 &
+                            # Check if the systemd service is running and restart it if necessary
+                            echo "Restarting DHT22 app via systemd..."
+                            sudo systemctl restart dht22-app.service
 
                             echo "Deployment finished!"
                             '
