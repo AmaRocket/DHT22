@@ -32,9 +32,6 @@ pipeline {
                             set -e # Stop if anything goes wrong
                             echo Connection Successful!
 
-                            source dht_env/bin/activate
-                            echo virtual environment has been activated!
-
                             cd /home/localadmin/DHT22/DHT22
                             git stash
                             echo "Pulling latest code..."
@@ -48,8 +45,6 @@ pipeline {
                                 sudo kill -9 \$PID
                                 sleep 2
                             fi
-
-                            pip install -r requirements.txt
 
                             echo Dependencies has been installed
 

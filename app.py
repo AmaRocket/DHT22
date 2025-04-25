@@ -4,7 +4,7 @@ from datetime import datetime
 from random import random
 from threading import Lock
 
-import flask_socketio as flask_socketio
+# import flask_socketio as flask_socketio
 from flask import Flask, render_template, request, Response
 from flask_socketio import SocketIO
 from prometheus_client import Gauge, generate_latest, CONTENT_TYPE_LATEST
