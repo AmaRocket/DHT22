@@ -4,7 +4,7 @@ pipeline {
     environment {
         RPI_HOST = credentials("rpi_ip")
         USER = credentials("admin_username")
-        APP_PATH = credentials("rpi_app_path")
+//         APP_PATH = credentials("rpi_app_path")
     }
 
     stages {
