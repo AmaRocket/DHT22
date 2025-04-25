@@ -5,8 +5,9 @@ from random import random
 from threading import Lock
 
 import flask_socketio as flask_socketio
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, Response
 from flask_socketio import SocketIO
+from prometheus_client import Gauge, generate_latest, CONTENT_TYPE_LATEST
 
 if platform.system() == "Linux":
     import board
@@ -31,6 +32,12 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret"
 socketio = SocketIO(app, cors_allowed_origins="*")
 
+
+# Prometheus metrics
+temperature_gauge = Gauge('tunnel_temperature_celsius', 'Temperature in Celsius in the tunnel')
+humidity_gauge = Gauge('tunnel_humidity_percent', 'Humidity percentage in the tunnel')
+
+
 """
 Background Thread
 """
@@ -39,6 +46,13 @@ Background Thread
 def background_thread():
     while True:
         temperature, humidity = dht22_module.get_sensor_readings()
+
+        # Set Prometheus metrics
+        if temperature is not None:
+            temperature_gauge.set(temperature)
+        if humidity is not None:
+            humidity_gauge.set(humidity)
+
         sensor_readings = {
             "temperature": temperature,
             "humidity": humidity,
@@ -57,6 +71,15 @@ Serve root index file
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+"""
+Prometheus metrics endpoint
+"""
+@app.route("/metrics")
+def metrics():
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
+
 
 
 """

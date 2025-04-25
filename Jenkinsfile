@@ -31,6 +31,10 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no \$USER@\${RPI_HOST} '
                             set -e # Stop if anything goes wrong
                             echo Connection Successful!
+
+                            source dht_env/bin/activate
+                            echo virtual environment has been activated!
+
                             cd /home/localadmin/DHT22/DHT22
                             git stash
                             echo "Pulling latest code..."
@@ -44,6 +48,10 @@ pipeline {
                                 sudo kill -9 \$PID
                                 sleep 2
                             fi
+
+                            pip install -r requirements.txt
+
+                            echo Dependencies has been installed
 
                             echo "Starting Flask app..."
                             nohup python3 app.py > flask.log 2>&1 &
