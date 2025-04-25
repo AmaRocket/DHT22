@@ -5,9 +5,9 @@ from random import random
 from threading import Lock
 
 # import flask_socketio as flask_socketio
-from flask import Flask, render_template, request, Response
+from flask import Flask, Response, render_template, request
 from flask_socketio import SocketIO
-from prometheus_client import Gauge, generate_latest, CONTENT_TYPE_LATEST
+from prometheus_client import CONTENT_TYPE_LATEST, Gauge, generate_latest
 
 if platform.system() == "Linux":
     import board
@@ -34,8 +34,14 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 
 
 # Prometheus metrics
-temperature_gauge = Gauge('tunnel_temperature_celsius', 'Temperature in Celsius in the tunnel')
-humidity_gauge = Gauge('tunnel_humidity_percent', 'Humidity percentage in the tunnel')
+temperature_gauge = Gauge(
+    "tunnel_temperature_celsius",
+    "Temperature in Celsius in the tunnel",
+    ["Temperature"],
+)
+humidity_gauge = Gauge(
+    "tunnel_humidity_percent", "Humidity percentage in the tunnel", ["Humidity"]
+)
 
 
 """
@@ -76,10 +82,11 @@ def index():
 """
 Prometheus metrics endpoint
 """
+
+
 @app.route("/metrics")
 def metrics():
     return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
-
 
 
 """
