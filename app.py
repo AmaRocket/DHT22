@@ -36,11 +36,10 @@ socketio = SocketIO(app, cors_allowed_origins="*")
 # Prometheus metrics
 temperature_gauge = Gauge(
     "tunnel_temperature_celsius",
-    "Temperature in Celsius in the tunnel",
-    ["Temperature"],
+    "Temperature in Celsius in the tunnel"
 )
 humidity_gauge = Gauge(
-    "tunnel_humidity_percent", "Humidity percentage in the tunnel", ["Humidity"]
+    "tunnel_humidity_percent", "Humidity percentage in the tunnel"
 )
 
 
