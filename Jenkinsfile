@@ -4,7 +4,6 @@ pipeline {
     environment {
         RPI_HOST = credentials("rpi_ip")
         USER = credentials("admin_username")
-//         APP_PATH = credentials("rpi_app_path")
     }
 
     stages {
@@ -31,7 +30,6 @@ pipeline {
                         ssh -o StrictHostKeyChecking=no \$USER@\${RPI_HOST} '
                             set -e # Stop if anything goes wrong
                             echo Connection Successful!
-
                             cd /home/localadmin/DHT22/DHT22
                             git stash
                             echo "Pulling latest code..."
@@ -46,13 +44,10 @@ pipeline {
                                 sleep 2
                             fi
 
-                            echo Dependencies has been installed
-
                             echo "Starting Flask app..."
                             nohup python3 app.py > flask.log 2>&1 &
 
                             echo "Deployment finished!"
-                            exit 0
                             '
                         """
                         sh '''
