@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         RPI_HOST = credentials("rpi_ip")
-        USER = credentials("admin_username")
+        USER = credentials("ssh_user")
     }
 
     stages {
