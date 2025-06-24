@@ -108,9 +108,10 @@ var humidityData = [
     gauge: {
       axis: { range: [null, 100] },
       steps: [
-        { range: [0, 20], color: "yellow" },
-        { range: [20, 30], color: "lightgray" },
-        { range: [30, 70], color: "gray" },
+        { range: [0, 20], color: "white" },
+        { range: [20, 35], color: "lightgray" },
+        { range: [35, 50], color: "gray" },
+        { range: [50, 60], color: "yellow"},
         { range: [60, 80], color: "orange" },
         { range: [80, 100], color: "red" },
       ],
