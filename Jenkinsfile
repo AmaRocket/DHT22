@@ -11,11 +11,13 @@ pipeline {
             steps {
                 dir('/var/lib/jenkins/workspace/RPI2_Temperature_Measurement/') {
                     script {
-                        if (fileExists('.git')&& sh(script: 'git rev-parse --is-inside-work-tree', returnStatus: true) == 0) {
+                        if (fileExists('.git') && sh(script: 'git rev-parse --is-inside-work-tree', returnStatus: true) == 0) {
                             sh 'git reset --hard'
                             sh 'git clean -fdx'
+                            sh 'rm -f .git/config.lock || true'
                             sh 'git pull origin main'
                         } else {
+                            deleteDir()
                             git branch: 'main', url: 'https://github.com/AmaRocket/DHT22.git'
                         }
                     }
