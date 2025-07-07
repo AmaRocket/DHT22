@@ -1,6 +1,6 @@
 **Raspberry Pi DHT22 Temperature measurement station Flask SocketIO)**
 
-+ SUpport of DS18B20 Sensor
++ Extra support of DS18B20 Sensor
 
 ![dashboard.png](static/images/dashboard.png)
 
