@@ -1,8 +1,10 @@
 var temperatureHistoryDiv = document.getElementById("temperature-history");
 var humidityHistoryDiv = document.getElementById("humidity-history");
+var outdoorHistoryDiv = document.getElementById("outdoor-history"); // ✅
 
 var temperatureGaugeDiv = document.getElementById("temperature-gauge");
 var humidityGaugeDiv = document.getElementById("humidity-gauge");
+var outdoorGaugeDiv = document.getElementById("outdoor-gauge"); // ✅
 
 var graphConfig = {
   displayModeBar: false,
@@ -13,7 +15,7 @@ var graphConfig = {
 var temperatureTrace = {
   x: [],
   y: [],
-  name: "Temperature",
+  name: "Indoor Temp",
   mode: "lines+markers",
   type: "line",
 };
@@ -24,193 +26,166 @@ var humidityTrace = {
   mode: "lines+markers",
   type: "line",
 };
+var outdoorTrace = {
+  x: [],
+  y: [],
+  name: "Outdoor Temp",
+  mode: "lines+markers",
+  type: "line",
+};
 
 var temperatureLayout = {
   autosize: true,
-  title: {
-    text: "Temperature",
-  },
-  font: {
-    size: 14,
-    color: "#000",
-  },
+  title: { text: "Indoor Temperature" },
+  font: { size: 14, color: "#000" },
   colorway: ["#B22222"],
-  //   width: 450,
-  //   height: 260,
-//  margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
   margin: { t: 30, b: 30, l: 50, r: 20, pad: 0 },
 };
 var humidityLayout = {
   autosize: true,
-  title: {
-    text: "Humidity",
-  },
-  font: {
-    size: 14,
-    color: "#7f7f7f",
-  },
+  title: { text: "Humidity" },
+  font: { size: 14, color: "#7f7f7f" },
   colorway: ["#00008B"],
-  //   width: 450,
-  //   height: 260,
-//  margin: { t: 30, b: 20, l: 30, r: 20, pad: 0 },
   margin: { t: 30, b: 30, l: 50, r: 20, pad: 0 },
 };
-var config = { responsive: true };
+var outdoorLayout = {
+  autosize: true,
+  title: { text: "Outdoor Temperature" },
+  font: { size: 14, color: "#2f4f4f" },
+  colorway: ["#228B22"],
+  margin: { t: 30, b: 30, l: 50, r: 20, pad: 0 },
+};
 
-Plotly.newPlot(
-  temperatureHistoryDiv,
-  [temperatureTrace],
-  temperatureLayout,
-  graphConfig
-);
-Plotly.newPlot(
-  humidityHistoryDiv,
-  [humidityTrace],
-  humidityLayout,
-  graphConfig
-);
-
+Plotly.newPlot(temperatureHistoryDiv, [temperatureTrace], temperatureLayout, graphConfig);
+Plotly.newPlot(humidityHistoryDiv, [humidityTrace], humidityLayout, graphConfig);
+Plotly.newPlot(outdoorHistoryDiv, [outdoorTrace], outdoorLayout, graphConfig); // ✅
 
 // Gauge Data
-var temperatureData = [
-  {
-    domain: { x: [0, 1], y: [0, 1] },
-    value: 0,
-    title: { text: "Temperature" },
-    type: "indicator",
-    mode: "gauge+number+delta",
-    delta: { reference: 25 },
-    gauge: {
-      axis: { range: [null, 50] },
-      steps: [
-        { range: [0, 20], color: "lightgray" },
-        { range: [20, 30], color: "gray" },
-        { range: [30, 40], color: "orange" },
-        { range: [40, 50], color: "red" },
-      ],
-      threshold: {
-        line: { color: "red", width: 4 },
-        thickness: 0.75,
-        value: 25,
-      },
+var layout = {
+  width: 350,
+  height: 250,
+  paper_bgcolor: "#a5d8d3",
+  plot_bgcolor: "#a5d8d3",
+  margin: { t: 0, b: 0, l: 0, r: 0 },
+};
+
+var temperatureData = [{
+  domain: { x: [0, 1], y: [0, 1] },
+  value: 0,
+  title: { text: "Indoor Temp" },
+  type: "indicator",
+  mode: "gauge+number+delta",
+  delta: { reference: 25 },
+  gauge: {
+    axis: { range: [null, 50] },
+    steps: [
+      { range: [0, 20], color: "lightgray" },
+      { range: [20, 30], color: "gray" },
+      { range: [30, 40], color: "orange" },
+      { range: [40, 50], color: "red" },
+    ],
+    threshold: {
+      line: { color: "red", width: 4 },
+      thickness: 0.75,
+      value: 25,
     },
   },
-];
+}];
 
-var humidityData = [
-  {
-    domain: { x: [0, 1], y: [0, 1] },
-    value: 0,
-    title: { text: "Humidity" },
-    type: "indicator",
-    mode: "gauge+number+delta",
-    delta: { reference: 45 },
-    gauge: {
-      axis: { range: [null, 100] },
-      steps: [
-        { range: [0, 20], color: "white" },
-        { range: [20, 35], color: "lightgray" },
-        { range: [35, 50], color: "gray" },
-        { range: [50, 60], color: "yellow"},
-        { range: [60, 80], color: "orange" },
-        { range: [80, 100], color: "red" },
-      ],
-      threshold: {
-        line: { color: "red", width: 4 },
-        thickness: 0.75,
-        value: 45,
-      },
+var humidityData = [{
+  domain: { x: [0, 1], y: [0, 1] },
+  value: 0,
+  title: { text: "Humidity" },
+  type: "indicator",
+  mode: "gauge+number+delta",
+  delta: { reference: 45 },
+  gauge: {
+    axis: { range: [null, 100] },
+    steps: [
+      { range: [0, 20], color: "white" },
+      { range: [20, 35], color: "lightgray" },
+      { range: [35, 50], color: "gray" },
+      { range: [50, 60], color: "yellow" },
+      { range: [60, 80], color: "orange" },
+      { range: [80, 100], color: "red" },
+    ],
+    threshold: {
+      line: { color: "red", width: 4 },
+      thickness: 0.75,
+      value: 45,
     },
   },
-];
+}];
 
-var layout = { width: 350, height: 250, paper_bgcolor: '#a5d8d3', plot_bgcolor: '#a5d8d3',  margin: { t: 0, b: 0, l: 0, r: 0 } };
+var outdoorData = [{ // ✅
+  domain: { x: [0, 1], y: [0, 1] },
+  value: 0,
+  title: { text: "Outdoor Temp" },
+  type: "indicator",
+  mode: "gauge+number+delta",
+  delta: { reference: 10 },
+  gauge: {
+    axis: { range: [null, 50] },
+    steps: [
+      { range: [0, 10], color: "#d0f0c0" },
+      { range: [10, 20], color: "#a2d5ab" },
+      { range: [20, 30], color: "#7dc77d" },
+      { range: [30, 50], color: "#ffcc99" },
+    ],
+    threshold: {
+      line: { color: "green", width: 4 },
+      thickness: 0.75,
+      value: 15,
+    },
+  },
+}];
 
 Plotly.newPlot(temperatureGaugeDiv, temperatureData, layout, graphConfig);
 Plotly.newPlot(humidityGaugeDiv, humidityData, layout, graphConfig);
+Plotly.newPlot(outdoorGaugeDiv, outdoorData, layout, graphConfig); // ✅
 
-// Temperature
-let newTempXArray = [];
-let newTempYArray = [];
-// Humidity
-let newHumidityXArray = [];
-let newHumidityYArray = [];
+let newTempXArray = [], newTempYArray = [];
+let newHumidityXArray = [], newHumidityYArray = [];
+let newOutdoorXArray = [], newOutdoorYArray = []; // ✅
 
-// The maximum number of data points displayed on our scatter/line graph
 let MAX_GRAPH_POINTS = 12;
 let ctr = 0;
 
-function updateBoxes(temperature, humidity) {
-  let temperatureDiv = document.getElementById("temperature");
-  let humidityDiv = document.getElementById("humidity");
-
-  temperatureDiv.innerHTML = temperature + " C";
-  humidityDiv.innerHTML = humidity + " %";
+function updateBoxes(temperature, humidity, outTemp) {
+  document.getElementById("temperature").innerHTML = temperature + " C";
+  document.getElementById("humidity").innerHTML = humidity + " %";
+  document.getElementById("out_temp").innerHTML = outTemp + " C"; // ✅
 }
 
-function updateGauge(temperature, humidity) {
-  var temperature_update = {
-    value: temperature,
-  };
-  var humidity_update = {
-    value: humidity,
-  };
-
-  Plotly.update(temperatureGaugeDiv, temperature_update);
-  Plotly.update(humidityGaugeDiv, humidity_update);
+function updateGauge(temperature, humidity, outTemp) {
+  Plotly.update(temperatureGaugeDiv, { value: [temperature] });
+  Plotly.update(humidityGaugeDiv, { value: [humidity] });
+  Plotly.update(outdoorGaugeDiv, { value: [outTemp] }); // ✅
 }
 
 function updateCharts(lineChartDiv, xArray, yArray, sensorRead) {
-  var today = new Date();
-  var time =
-    today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
-  if (xArray.length >= MAX_GRAPH_POINTS) {
-    xArray.shift();
-  }
-  if (yArray.length >= MAX_GRAPH_POINTS) {
-    yArray.shift();
-  }
+  if (xArray.length >= MAX_GRAPH_POINTS) xArray.shift();
+  if (yArray.length >= MAX_GRAPH_POINTS) yArray.shift();
   xArray.push(ctr++);
   yArray.push(sensorRead);
-
-  var data_update = {
-    x: [xArray],
-    y: [yArray],
-  };
-
-  Plotly.update(lineChartDiv, data_update);
+  Plotly.update(lineChartDiv, { x: [xArray], y: [yArray] });
 }
 
 function updateSensorReadings(jsonResponse) {
-  let temperature = jsonResponse.temperature.toFixed(2);
-  let humidity = jsonResponse.humidity.toFixed(2);
+  let temperature = parseFloat(jsonResponse.temperature).toFixed(2);
+  let humidity = parseFloat(jsonResponse.humidity).toFixed(2);
+  let outTemp = parseFloat(jsonResponse.out_temp || 0).toFixed(2); // ✅ fallback if not present
 
-  updateBoxes(temperature, humidity);
+  updateBoxes(temperature, humidity, outTemp);
+  updateGauge(temperature, humidity, outTemp);
 
-  updateGauge(temperature, humidity);
-
-  // Update Temperature Line Chart
-  updateCharts(
-    temperatureHistoryDiv,
-    newTempXArray,
-    newTempYArray,
-    temperature
-  );
-  // Update Humidity Line Chart
-  updateCharts(
-    humidityHistoryDiv,
-    newHumidityXArray,
-    newHumidityYArray,
-    humidity
-  );
+  updateCharts(temperatureHistoryDiv, newTempXArray, newTempYArray, temperature);
+  updateCharts(humidityHistoryDiv, newHumidityXArray, newHumidityYArray, humidity);
+  updateCharts(outdoorHistoryDiv, newOutdoorXArray, newOutdoorYArray, outTemp); // ✅
 }
-/*
-  SocketIO Code
-*/
-//   var socket = io.connect("http://" + document.domain + ":" + location.port);
-var socket = io.connect();
 
-//receive details from server
+// SocketIO
+var socket = io.connect();
 socket.on("updateSensorData", function (msg) {
   var sensorReadings = JSON.parse(msg);
   updateSensorReadings(sensorReadings);

@@ -42,21 +42,32 @@
           </div>
 
           <div class="row">
-            <div class="d-flex p-2 justify-content-evenly overview-boxes justify-content-center">
-              <div class="box widget-box d-flex align-items-center justify-content-center rounded-3 p-1 shadow">
+            <div class="d-flex p-2 justify-content-evenly overview-boxes justify-content-center flex-wrap">
+              <!-- Indoor Temperature -->
+              <div class="box widget-box d-flex align-items-center justify-content-center rounded-3 p-1 shadow m-2">
                 <div class="right-side text-white">
-                  <div class="box-topic">Temperature</div>
-                  <div class="number" id="temperature">35 C</div>
+                  <div class="box-topic">Indoor Temperature</div>
+                  <div class="number" id="temperature">-- C</div>
                 </div>
                 <span class="indicator material-symbols-outlined text-white">device_thermostat</span>
               </div>
 
-              <div class="box widget-box d-flex align-items-center justify-content-center rounded-3 p-1 shadow">
+              <!-- Humidity -->
+              <div class="box widget-box d-flex align-items-center justify-content-center rounded-3 p-1 shadow m-2">
                 <div class="right-side text-white">
                   <div class="box-topic">Humidity</div>
-                  <div class="number" id="humidity">40%</div>
+                  <div class="number" id="humidity">--%</div>
                 </div>
                 <span class="indicator material-symbols-outlined text-white">humidity_percentage</span>
+              </div>
+
+              <!-- Outdoor Temperature -->
+              <div class="box widget-box d-flex align-items-center justify-content-center rounded-3 p-1 shadow m-2">
+                <div class="right-side text-white">
+                  <div class="box-topic">Outdoor Temperature</div>
+                  <div class="number" id="out_temp">-- C</div>
+                </div>
+                <span class="indicator material-symbols-outlined text-white">thermostat_auto</span>
               </div>
             </div>
           </div>
@@ -66,8 +77,11 @@
               <div class="p-3 border-top border-3 border-danger bg-white mb-4">
                 <div id="temperature-history" class="history-chart"></div>
               </div>
-              <div class="p-3 border-top border-3 border-danger bg-white">
+              <div class="p-3 border-top border-3 border-danger bg-white mb-4">
                 <div id="humidity-history" class="history-chart"></div>
+              </div>
+              <div class="p-3 border-top border-3 border-danger bg-white">
+                <div id="outdoor-history" class="history-chart"></div>
               </div>
             </div>
 
@@ -77,6 +91,9 @@
               </div>
               <div class="row p-3 bg-white border-top border-3 border-danger mt-4 w-100">
                 <div id="humidity-gauge"></div>
+              </div>
+              <div class="row p-3 bg-white border-top border-3 border-danger mt-4 w-100">
+                <div id="outdoor-gauge"></div>
               </div>
             </div>
           </div>

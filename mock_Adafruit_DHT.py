@@ -4,4 +4,4 @@ DHT22 = 22
 
 def read_retry(sensor, pin):
     # Fake temperature and humidity
-    return (50.0, 22.3)
+    return (55.5, 22.2)
