@@ -1,11 +1,16 @@
 import os
 import glob
 import time
+import sys
 
-# Locate the sensor folder
 base_dir = '/sys/bus/w1/devices/'
-device_folder = glob.glob(base_dir + '28*')[0]
-device_file = device_folder + '/w1_slave'
+device_folders = glob.glob(base_dir + '28*')
+
+if not device_folders:
+    print("❌ No DS18B20 sensor detected! Check wiring and reboot.")
+    sys.exit(1)
+
+device_file = device_folders[0] + '/w1_slave'
 
 def read_temp_raw():
     with open(device_file, 'r') as f:
@@ -22,7 +27,6 @@ def read_temp():
         temp_c = float(temp_string) / 1000.0
         return temp_c
 
-if __name__ == "__main__":
-    while True:
-        print(f"Temperature: {read_temp():.2f}°C")
-        time.sleep(2)
+while True:
+    print(f"Temperature: {read_temp():.2f}°C")
+    time.sleep(2)
