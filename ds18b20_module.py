@@ -8,52 +8,51 @@ os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
 
+# ds18b20_module.py
+
+import glob
+import time
+import datetime
+import os
+
+# Load required kernel modules
+os.system('modprobe w1-gpio')
+os.system('modprobe w1-therm')
+
+
 class DS18B20Module:
     def __init__(self):
-        self.base_dir = r'/sys/bus/w1/devices/28*'
-        self.sensor_path = []
-        self.sensor_name = []
-        self.temps = []
-        self.log = []
+        self.device_folder = self._find_device()
 
-    def find_sensors(self):
-        self.sensor_path = glob.glob(self.base_dir)
-        self.sensor_name = [path.split('/')[-1] for path in self.sensor_path]
+    def _find_device(self):
+        devices = glob.glob('/sys/bus/w1/devices/28*')
+        return devices[0] if devices else None
 
-    def strip_string(self, temp_str):
-        i = temp_str.index('t=')
-        if i != -1:
-            t = temp_str[i + 2:]
-            temp_c = float(t) / 1000.0
-            temp_f = temp_c * (9.0 / 5.0) + 32.0
-        return temp_c, temp_f
+    def get_sensor_readings(self):
+        if not self.device_folder:
+            return None, None
 
-    def read_temp(self):
-        tstamp = datetime.datetime.now()
-        for sensor, path in zip(self.sensor_name, self.sensor_path):
-            # open sensor file and read data
-            with open(path + '/w1_slave', 'r') as f:
-                valid, temp = f.readlines()
-            # check validity of data
-            if 'YES' in valid:
-                self.log.append((tstamp, sensor) + self.strip_string(temp))
-                time.sleep(2)
-            else:
-                time.sleep(0.2)
+        try:
+            with open(f"{self.device_folder}/w1_slave", "r") as f:
+                lines = f.readlines()
 
-    def print_temps(self):
-        print('-' * 90)
-        for t, n, c, f in self.log:
-            print(f'Sensor: {n}  C={c:,.3f}  F={f:,.3f}  DateTime: {t}')
+            if "YES" in lines[0]:
+                temp_pos = lines[1].find("t=")
+                if temp_pos != -1:
+                    temp_string = lines[1][temp_pos + 2:]
+                    temp_c = float(temp_string) / 1000.0
+                    temp_f = temp_c * 9.0 / 5.0 + 32.0
+                    return temp_c, temp_f
+        except Exception as e:
+            print(f"DS18B20 read error: {e}")
 
-    def clear_log(self):
-        s.log.clear()
+        return None, None
 
 
-s = DS18B20Module()
-s.find_sensors()
-
-while True:
-    s.read_temp()
-    s.print_temps()
-    s.clear_log()
+# s = DS18B20Module()
+# s.find_sensors()
+#
+# while True:
+#     s.read_temp()
+#     s.print_temps()
+#     s.clear_log()
