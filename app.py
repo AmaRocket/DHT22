@@ -30,7 +30,7 @@ def background_thread():
     while True:
         # Sensor readings
         in_temp, in_humidity = dht22.get_sensor_readings()
-        out_temp, _ = ds18b20.get_sensor_readings()
+        out_temp, _ = ds18b20.print_temps()
 
         # Prometheus
         if in_temp is not None:
