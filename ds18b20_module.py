@@ -47,12 +47,3 @@ class DS18B20Module:
             print(f"DS18B20 read error: {e}")
 
         return None, None
-
-
-# s = DS18B20Module()
-# s.find_sensors()
-#
-# while True:
-#     s.read_temp()
-#     s.print_temps()
-#     s.clear_log()
