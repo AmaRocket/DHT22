@@ -8,7 +8,7 @@ os.system('modprobe w1-gpio')
 os.system('modprobe w1-therm')
 
 
-class DS18B20:
+class DS18B20Module:
     def __init__(self):
         self.base_dir = r'/sys/bus/w1/devices/28*'
         self.sensor_path = []
@@ -50,7 +50,7 @@ class DS18B20:
         s.log.clear()
 
 
-s = DS18B20()
+s = DS18B20Module()
 s.find_sensors()
 
 while True:
