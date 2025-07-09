@@ -112,11 +112,13 @@ def background_thread():
         console.print(table)
 
         # CLI Graph Plot
-        if (
+        plot_ready = (
                 len(temp_series) == len(humidity_series) == len(outdoor_series) == len(timestamps)
                 and len(temp_series) >= 2
                 and all(v is not None for v in temp_series + humidity_series + outdoor_series)
-        ):
+        )
+
+        if plot_ready:
             plt.clear_data()
             plt.clear_figure()
             plt.title("Temperature / Humidity (Past Hour)")
@@ -125,13 +127,14 @@ def background_thread():
             plt.ticks_color('white')
 
             x_vals = list(range(len(temp_series)))
+
             plt.plot(x_vals, temp_series, label="Indoor Temp °C", marker="dot")
             plt.plot(x_vals, humidity_series, label="Humidity %", marker="dot")
             plt.plot(x_vals, outdoor_series, label="Outdoor Temp °C", marker="dot")
             plt.ylim(0, 50)
             plt.show()
         else:
-            console.print("[yellow]Skipping plot: incomplete data[/yellow]")
+            console.print("[yellow]Skipping plot: incomplete or mismatched data[/yellow]")
 
         socketio.sleep(3)
 
