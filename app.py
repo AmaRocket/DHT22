@@ -116,6 +116,8 @@ def background_thread():
         console.log(f"Lens: T={len(temp_series)} H={len(humidity_series)} O={len(outdoor_series)} TS={len(timestamps)}")
         console.log(f"Valid: {all(v is not None for v in temp_series + humidity_series + outdoor_series)}")
 
+        console.print("[red]● Indoor Temp[/]  [cyan]● Humidity[/]  [green]● Outdoor Temp[/]")
+
         plot_ready = (
                 len(temp_series) == len(humidity_series) == len(outdoor_series) == len(timestamps)
                 and len(temp_series) >= 3  # At least 3 points for safe legend rendering
@@ -129,12 +131,18 @@ def background_thread():
             plt.canvas_color('black')
             plt.axes_color('black')
             plt.ticks_color('white')
-
-            x_vals = list(range(len(temp_series)))  # or: timestamps
-            plt.plot(x_vals, temp_series, label="Indoor Temp °C", marker="dot")
-            plt.plot(x_vals, humidity_series, label="Humidity %", marker="dot")
-            plt.plot(x_vals, outdoor_series, label="Outdoor Temp °C", marker="dot")
             plt.ylim(0, 50)
+
+            x_vals = list(range(len(temp_series)))
+
+            # Only plot if series are valid and long enough
+            if len(temp_series) >= 3 and all(v is not None for v in temp_series):
+                plt.plot(x_vals, temp_series, marker="dot", color="red")
+            if len(humidity_series) >= 3 and all(v is not None for v in humidity_series):
+                plt.plot(x_vals, humidity_series, marker="dot", color="cyan")
+            if len(outdoor_series) >= 3 and all(v is not None for v in outdoor_series):
+                plt.plot(x_vals, outdoor_series, marker="dot", color="green")
+
             plt.show()
         else:
             console.print("[yellow]Skipping plot: waiting for at least 3 complete data points.[/yellow]")
