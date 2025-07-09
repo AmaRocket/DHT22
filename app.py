@@ -73,10 +73,10 @@ def background_thread():
 
         # CLI live update
         console.clear()
-        table = Table(title="Sensor Readings")
+        table = Table(title="Sensor Readings", title_style="bold magenta", expand=True, min_width=80)
 
-        table.add_column("Sensor", style="cyan", no_wrap=True)
-        table.add_column("Value", style="bold")
+        table.add_column("Sensor", style="cyan", no_wrap=True, justify="center")
+        table.add_column("Value", style="bold", justify="center")
 
         table.add_row("Indoor Temp", f"{in_temp:.1f}   C" if in_temp else "-")
         table.add_row("Humidity", f"{in_humidity:.1f} %" if in_humidity else "-")
