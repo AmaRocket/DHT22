@@ -195,3 +195,4 @@ socket.on("updateSensorData", function (msg) {
   var sensorReadings = JSON.parse(msg);
   updateSensorReadings(sensorReadings);
 });
+
