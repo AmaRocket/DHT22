@@ -18,7 +18,6 @@ if platform.system() == "Linux":
     import board
 
     from dht22_module import DHT22Module
-
     dht22_module = DHT22Module(board.D18)
 else:
     # Mock for local dev on Mac
