@@ -123,7 +123,6 @@ def background_thread():
         plt.canvas_color('black')
         plt.axes_color('black')
         plt.ticks_color('white')
-        plt.legend()
         plt.show()
 
         socketio.sleep(3)
