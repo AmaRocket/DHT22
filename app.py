@@ -73,7 +73,7 @@ def background_thread():
 
         # CLI live update
         console.clear()
-        table = Table(title="Sensor Readings", title_style="bold magenta", expand=True, min_width=80)
+        table = Table(title="Sensor Readings", title_style="bold magenta", expand=True, min_width=100)
 
         table.add_column("Sensor", style="cyan", no_wrap=True, justify="center")
         table.add_column("Value", style="bold", justify="center")
