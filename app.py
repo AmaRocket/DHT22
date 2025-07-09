@@ -19,6 +19,9 @@ from rich.console import Console
 from rich.table import Table
 
 
+from rich.layout import Layout
+from rich.panel import Panel
+
 from ds18b20_module import DS18B20Module
 
 
@@ -61,93 +64,78 @@ MAX_POINTS = 20
 
 
 def background_thread():
-    while True:
-        # Sensor readings
-        in_temp, in_humidity = dht22.get_sensor_readings()
-        out_temp, _ = ds18b20.get_sensor_readings()
+    with Live(console=console, refresh_per_second=1, screen=True) as live:
+        while True:
+            # Sensor readings
+            in_temp, in_humidity = dht22.get_sensor_readings()
+            out_temp, _ = ds18b20.get_sensor_readings()
 
-        now = datetime.now().strftime("%H:%M:%S")
-        # Save values
-        timestamps.append(now)
-        temp_series.append(in_temp)
-        humidity_series.append(in_humidity)
-        outdoor_series.append(out_temp)
+            now = datetime.now().strftime("%H:%M:%S")
+            # Save values
+            timestamps.append(now)
+            temp_series.append(in_temp)
+            humidity_series.append(in_humidity)
+            outdoor_series.append(out_temp)
 
-        if len(temp_series) > MAX_POINTS:
-            timestamps.pop(0)
-            temp_series.pop(0)
-            humidity_series.pop(0)
-            outdoor_series.pop(0)
+            if len(temp_series) > MAX_POINTS:
+                timestamps.pop(0)
+                temp_series.pop(0)
+                humidity_series.pop(0)
+                outdoor_series.pop(0)
 
-        # Prometheus
-        if in_temp is not None:
-            inside_temperature.set(in_temp)
-        if in_humidity is not None:
-            inside_humidity.set(in_humidity)
-        if out_temp is not None:
-            outside_temperature.set(out_temp)
+            # Prometheus
+            if in_temp is not None:
+                inside_temperature.set(in_temp)
+            if in_humidity is not None:
+                inside_humidity.set(in_humidity)
+            if out_temp is not None:
+                outside_temperature.set(out_temp)
 
-        # JSON for frontend
-        sensor_data = {
-            "inside": {
-                "temperature": in_temp if in_temp is not None else -1,
-                "humidity": in_humidity if in_humidity is not None else -1,
-            },
-            "outside": {
-                "temperature": out_temp if out_temp is not None else -1,
-            },
-            "timestamp": datetime.now().isoformat()
-        }
+            # Prepare table
+            table = Table(title="Sensor Readings", expand=True)
+            table.add_column("Sensor", style="cyan")
+            table.add_column("Value", style="bold")
+            table.add_row("Indoor Temp", f"{in_temp:.1f} °C" if in_temp else "-")
+            table.add_row("Indoor Humidity", f"{in_humidity:.1f} %" if in_humidity else "-")
+            table.add_row("Outdoor Temp", f"{out_temp:.1f} °C" if out_temp else "-")
 
-        socketio.emit("updateSensorData", json.dumps(sensor_data))
-
-        # CLI live update
-        console.clear()
-        table = Table(title="Sensor Readings")
-        table.add_column("Sensor", style="cyan")
-        table.add_column("Value", style="bold")
-        table.add_row("Indoor Temp", f"{in_temp:.1f} °C" if in_temp else "-")
-        table.add_row("Indoor Humidity", f"{in_humidity:.1f} %" if in_humidity else "-")
-        table.add_row("Outdoor Temp", f"{out_temp:.1f} °C" if out_temp else "-")
-        console.print(table)
-
-        # CLI Graph Plot
-
-        console.log(f"Lens: T={len(temp_series)} H={len(humidity_series)} O={len(outdoor_series)} TS={len(timestamps)}")
-        console.log(f"Valid: {all(v is not None for v in temp_series + humidity_series + outdoor_series)}")
-
-        console.print("[red]● Indoor Temp[/]  [cyan]● Humidity[/]  [green]● Outdoor Temp[/]")
-
-        plot_ready = (
-                len(temp_series) == len(humidity_series) == len(outdoor_series) == len(timestamps)
-                and len(temp_series) >= 3  # At least 3 points for safe legend rendering
-                and all(v is not None for v in temp_series + humidity_series + outdoor_series)
-        )
-
-        if plot_ready:
+            # Prepare plotext graph as string
             plt.clear_data()
             plt.clear_figure()
-            plt.title("Temperature / Humidity (Past Hour)")
-            plt.canvas_color('black')
-            plt.axes_color('black')
-            plt.ticks_color('white')
-            plt.ylim(0, 50)
-
+            plt.canvas_color("black")
+            plt.axes_color("black")
+            plt.ticks_color("white")
+            plt.title("Temperature & Humidity (Past Hour)")
+            plt.ylim(0, 100)  # Allow humidity > 50%
             x_vals = list(range(len(temp_series)))
 
-            # Only plot if series are valid and long enough
-            if len(temp_series) >= 3 and all(v is not None for v in temp_series):
+            if len(temp_series) >= 3:
                 plt.plot(x_vals, temp_series, marker="dot", color="red")
-            if len(humidity_series) >= 3 and all(v is not None for v in humidity_series):
+            if len(humidity_series) >= 3:
                 plt.plot(x_vals, humidity_series, marker="dot", color="cyan")
-            if len(outdoor_series) >= 3 and all(v is not None for v in outdoor_series):
+            if len(outdoor_series) >= 3:
                 plt.plot(x_vals, outdoor_series, marker="dot", color="green")
 
-            plt.show()
-        else:
-            console.print("[yellow]Skipping plot: waiting for at least 3 complete data points.[/yellow]")
+            plot_output = plt.build(return_string=True)
 
-        socketio.sleep(3)
+            # Combine table + plot in rich layout
+            layout = Layout()
+            layout.split(
+                Layout(Panel(table, title="📋 Latest Sensor Data"), name="upper", size=8),
+                Layout(Panel(plot_output, title="📊 Sensor Trends"), name="lower")
+            )
+
+            live.update(layout)
+
+            # Emit to web frontend
+            sensor_data = {
+                "inside": {"temperature": in_temp or -1, "humidity": in_humidity or -1},
+                "outside": {"temperature": out_temp or -1},
+                "timestamp": datetime.now().isoformat(),
+            }
+            socketio.emit("updateSensorData", json.dumps(sensor_data))
+
+            socketio.sleep(3)
 
 
 @app.route("/")
