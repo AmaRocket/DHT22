@@ -14,15 +14,9 @@ from rich.table import Table
 from rich.layout import Layout
 from rich.panel import Panel
 
-import itrm
-from ds18b20_module import DS18B20Module
+import itrm  # Terminal charting lib
 
-# Configure itrm for Unicode plotting
-itrm.Config.uni = True
-itrm.Config.cols = 60
-itrm.Config.rows = 15
-itrm.Config.bold = True
-itrm.Config.cmap = "rainbow"
+from ds18b20_module import DS18B20Module
 
 # Initialize sensors
 if platform.system() == "Linux":
@@ -49,20 +43,20 @@ inside_temperature = Gauge("inside_temperature_celsius", "Indoor temperature fro
 inside_humidity = Gauge("inside_humidity_percent", "Indoor humidity from DHT22")
 outside_temperature = Gauge("outside_temperature_celsius", "Outdoor temperature from DS18B20")
 
-# Store max 120 points (1 hour with 3s interval)
+# Store max 30 points (90 seconds @ 3s interval)
 temp_series = []
 humidity_series = []
 outdoor_series = []
 timestamps = []
-
 MAX_POINTS = 30
 
-def background_thread():
-    def sanitize(series):
-        return [v if v is not None else 0 for v in series]
+def sanitize(series):
+    return [v if v is not None else 0 for v in series]
 
+def background_thread():
     with Live(console=console, refresh_per_second=1, screen=True) as live:
         while True:
+            # Sensor readings
             in_temp, in_humidity = dht22.get_sensor_readings()
             out_temp, _ = ds18b20.get_sensor_readings()
 
@@ -78,6 +72,7 @@ def background_thread():
                 humidity_series.pop(0)
                 outdoor_series.pop(0)
 
+            # Prometheus metrics
             if in_temp is not None:
                 inside_temperature.set(in_temp)
             if in_humidity is not None:
@@ -85,6 +80,7 @@ def background_thread():
             if out_temp is not None:
                 outside_temperature.set(out_temp)
 
+            # Sensor table
             table = Table(title="Sensor Readings", expand=True)
             table.add_column("Sensor", style="cyan")
             table.add_column("Value", style="bold")
@@ -92,17 +88,35 @@ def background_thread():
             table.add_row("Indoor Humidity", f"{in_humidity:.1f} %" if in_humidity is not None else "-")
             table.add_row("Outdoor Temp", f"{out_temp:.1f} °C" if out_temp is not None else "-")
 
+            # Chart with itrm
             if len(temp_series) >= 3:
-                plot_output = itrm.iplot(
-                    [sanitize(temp_series), sanitize(humidity_series), sanitize(outdoor_series)],
-                    label=["Indoor Temp", "Humidity", "Outdoor Temp"],
-                    overlay=True,
-                    return_string=True
-                )
-                chart_panel = Panel(plot_output, title="📊 Sensor Trends")
+                chart_data = [
+                    sanitize(temp_series),
+                    sanitize(humidity_series),
+                    sanitize(outdoor_series),
+                ]
+
+                # Capture itrm.iplot() output
+                plot_buffer = io.StringIO()
+                sys.stdout = plot_buffer
+                try:
+                    itrm.iplot(
+                        chart_data,
+                        labels=["Indoor Temp", "Humidity", "Outdoor Temp"],
+                        colors=["green", "cyan", "red"],
+                        overlay=True
+                    )
+                except Exception as e:
+                    plot_buffer.write(f"[itrm error] {e}")
+                sys.stdout = sys.__stdout__
+
+                plot_output = plot_buffer.getvalue()
+                label_info = "[green]Indoor Temp[/] | [cyan]Humidity[/] | [red]Outdoor Temp[/]"
+                chart_panel = Panel(label_info + "\n\n" + plot_output, title="📊 Sensor Trends")
             else:
                 chart_panel = Panel("[yellow]Waiting for data...[/]", title="📊 Sensor Trends")
 
+            # Layout
             layout = Layout()
             layout.split(
                 Layout(Panel(table, title="📋 Latest Sensor Data"), name="upper", size=10),
@@ -111,6 +125,7 @@ def background_thread():
 
             live.update(layout)
 
+            # Emit to frontend
             sensor_data = {
                 "inside": {"temperature": in_temp or -1, "humidity": in_humidity or -1},
                 "outside": {"temperature": out_temp or -1},
