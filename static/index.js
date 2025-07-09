@@ -172,16 +172,33 @@ function updateCharts(lineChartDiv, xArray, yArray, sensorRead) {
 }
 
 function updateSensorReadings(jsonResponse) {
-  let temperature = parseFloat(jsonResponse.temperature).toFixed(2);
-  let humidity = parseFloat(jsonResponse.humidity).toFixed(2);
-  let outTemp = parseFloat(jsonResponse.out_temp || 0).toFixed(2); // ✅ fallback if not present
+  let temperature = parseFloat(jsonResponse.temperature || -1);
+  let humidity = parseFloat(jsonResponse.humidity || -1);
+  let outTemp = parseFloat(jsonResponse.out_temp || -1);
 
-  updateBoxes(temperature, humidity, outTemp);
-  updateGauge(temperature, humidity, outTemp);
+  updateBoxes(
+    temperature >= 0 ? temperature.toFixed(2) : "-",
+    humidity >= 0 ? humidity.toFixed(2) : "-",
+    outTemp >= 0 ? outTemp.toFixed(2) : "-"
+  );
+
+  updateGauge(
+    temperature >= 0 ? temperature : 0,
+    humidity >= 0 ? humidity : 0,
+    outTemp >= 0 ? outTemp : 0
+  );
+
+  if (temperature >= 0)
+    updateCharts(temperatureHistoryDiv, newTempXArray, newTempYArray, temperature);
+  if (humidity >= 0)
+    updateCharts(humidityHistoryDiv, newHumidityXArray, newHumidityYArray, humidity);
+  if (outTemp >= 0)
+    updateCharts(outdoorHistoryDiv, newOutdoorXArray, newOutdoorYArray, outTemp);
+
 
   updateCharts(temperatureHistoryDiv, newTempXArray, newTempYArray, temperature);
   updateCharts(humidityHistoryDiv, newHumidityXArray, newHumidityYArray, humidity);
-  updateCharts(outdoorHistoryDiv, newOutdoorXArray, newOutdoorYArray, outTemp); // ✅
+  updateCharts(outdoorHistoryDiv, newOutdoorXArray, newOutdoorYArray, outTemp);
 }
 
 // SocketIO

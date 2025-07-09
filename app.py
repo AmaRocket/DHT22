@@ -1,4 +1,5 @@
 import json
+import platform
 from datetime import datetime
 from threading import Lock
 from flask import Flask, Response, render_template, request
@@ -9,8 +10,24 @@ import board
 from dht22_module import DHT22Module
 from ds18b20_module import DS18B20Module
 
+
+
+if platform.system() == "Linux":
+    import board
+    from dht22_module import DHT22Module
+    dht22 = DHT22Module(board.D18)
+else:
+    # Mock for local dev on Mac
+    class MockDHT22Module:
+        def get_sensor_readings(self):
+            # Return some fake readings for dev/test
+            return 66.5, 66.5
+    dht22 = MockDHT22Module()
+
+
 # Initialize sensors
-dht22 = DHT22Module(board.D18)        # Inside temp + humidity
+# dht22 = DHT22Module(board.D18)        # Inside temp + humidity
+
 ds18b20 = DS18B20Module()             # Outside temp only
 
 # Flask + SocketIO setup
@@ -43,11 +60,11 @@ def background_thread():
         # JSON for frontend
         sensor_data = {
             "inside": {
-                "temperature": in_temp,
-                "humidity": in_humidity
+                "temperature": in_temp if in_temp is not None else -1,
+                "humidity": in_humidity if inside_humidity is not None else -1,
             },
             "outside": {
-                "temperature": out_temp
+                "temperature": out_temp if out_temp is not None else -1,
             },
             "timestamp": datetime.now().isoformat()
         }
