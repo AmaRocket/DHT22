@@ -122,7 +122,7 @@ def background_thread():
 
             layout = Layout()
             layout.split(
-                Layout(Panel(table, title="📋 Latest Sensor Data"), name="upper", size=8),
+                Layout(Panel(table, title="📋 Latest Sensor Data"), name="upper", size=10),
                 Layout(Panel(plot_output, title="📊 Sensor Trends"), name="lower")
             )
 
