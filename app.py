@@ -116,11 +116,11 @@ def background_thread():
         plt.clear_figure()
         plt.title("Temperature / Humidity (Past Hour)")
         x_vals = list(range(len(temp_series)))
-        if len(temp_series) == len(x_vals):
+        if all(v is not None for v in temp_series):
             plt.plot(x_vals, temp_series, label="Indoor Temp °C", marker="dot")
-        if len(humidity_series) == len(x_vals):
+        if all(v is not None for v in humidity_series):
             plt.plot(x_vals, humidity_series, label="Humidity %", marker="dot")
-        if len(outdoor_series) == len(x_vals):
+        if all(v is not None for v in outdoor_series):
             plt.plot(x_vals, outdoor_series, label="Outdoor Temp °C", marker="dot")
         plt.ylim(0, 50)
         plt.canvas_color('black')
