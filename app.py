@@ -6,6 +6,13 @@ from flask import Flask, Response, render_template, request
 from flask_socketio import SocketIO
 from prometheus_client import CONTENT_TYPE_LATEST, Gauge, generate_latest
 
+
+from rich.console import Console
+from rich.table import Table
+from rich.progress import Progress, BarColumn, TextColumn, TaskProgressColumn
+from rich.live import Live
+
+
 import board
 from dht22_module import DHT22Module
 from ds18b20_module import DS18B20Module
@@ -29,6 +36,7 @@ else:
 # dht22 = DHT22Module(board.D18)        # Inside temp + humidity
 
 ds18b20 = DS18B20Module()             # Outside temp only
+console = Console()
 
 # Flask + SocketIO setup
 thread = None
@@ -70,6 +78,20 @@ def background_thread():
         }
 
         socketio.emit("updateSensorData", json.dumps(sensor_data))
+
+        # CLI live update
+        console.clear()
+        table = Table(title="Sensor Readings")
+
+        table.add_column("Sensor", style="cyan", no_wrap=True)
+        table.add_column("Value", style="bold")
+
+        table.add_row("Indoor Temp", f"{in_temp:.1f} °C" if in_temp else "-")
+        table.add_row("Humidity", f"{in_humidity:.1f} %" if in_humidity else "-")
+        table.add_row("Outdoor Temp", f"{out_temp:.1f} °C" if out_temp else "-")
+
+        console.print(table)
+
         socketio.sleep(3)
 
 
