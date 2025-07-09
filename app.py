@@ -15,10 +15,10 @@ from rich.progress import Progress, BarColumn, TextColumn, TaskProgressColumn
 from rich.live import Live
 
 if platform.system() == "Linux":
-    import board
+    # import board
 
     from dht22_module import DHT22Module
-    dht22_module = DHT22Module(board.D18)
+    dht22_module = DHT22Module()
 else:
     # Mock for local dev on Mac
     class MockDHT22Module:
