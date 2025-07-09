@@ -60,7 +60,7 @@ humidity_series = []
 outdoor_series = []
 timestamps = []
 
-MAX_POINTS = 10
+MAX_POINTS = 30
 
 
 def background_thread():
