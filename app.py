@@ -112,6 +112,10 @@ def background_thread():
         console.print(table)
 
         # CLI Graph Plot
+
+        console.log(f"Lens: T={len(temp_series)} H={len(humidity_series)} O={len(outdoor_series)} TS={len(timestamps)}")
+        console.log(f"Valid: {all(v is not None for v in temp_series + humidity_series + outdoor_series)}")
+
         plot_ready = (
                 len(temp_series) == len(humidity_series) == len(outdoor_series) == len(timestamps)
                 and len(temp_series) >= 2
