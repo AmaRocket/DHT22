@@ -1,3 +1,5 @@
+import io
+import sys
 import json
 import platform
 from datetime import datetime
@@ -7,13 +9,9 @@ from flask_socketio import SocketIO
 from prometheus_client import CONTENT_TYPE_LATEST, Gauge, generate_latest
 
 
-from rich.console import Console
-from rich.table import Table
-from rich.progress import Progress, BarColumn, TextColumn, TaskProgressColumn
 from rich.live import Live
 
 import plotext as plt
-from collections import deque
 from datetime import datetime
 from rich.console import Console
 from rich.table import Table
@@ -116,9 +114,12 @@ def background_thread():
             if len(outdoor_series) >= 3:
                 plt.plot(x_vals, outdoor_series, marker="dot", color="green")
 
-            plot_output = plt.build(return_string=True)
+            plot_buffer = io.StringIO()
+            sys.stdout = plot_buffer
+            plt.build()
+            sys.stdout = sys.__stdout__
+            plot_output = plot_buffer.getvalue()
 
-            # Combine table + plot in rich layout
             layout = Layout()
             layout.split(
                 Layout(Panel(table, title="📋 Latest Sensor Data"), name="upper", size=8),
