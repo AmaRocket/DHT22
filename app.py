@@ -105,7 +105,7 @@ def background_thread():
 
         # CLI Graph Plot
         plt.clear_data()
-        plt.figure(rows=25, cols=100)
+        plt.clear_figure()
         plt.title("Temperature / Humidity (Past Hour)")
         plt.plot(time_series, temp_series, label="Indoor Temp °C", marker="dot")
         plt.plot(time_series, hum_series, label="Humidity %", marker="dot")
