@@ -17,7 +17,7 @@ class DHT22Module:
                 sensor = Adafruit_DHT.DHT22
                 pin = 4
                 humidity, temperature_c = Adafruit_DHT.read_retry(sensor, pin)
-                print(f"Temp: {temperature_c} C    Humidity: {humidity}% ")
+                # print(f"Temp: {temperature_c} C    Humidity: {humidity}% ")
                 return temperature_c, humidity
 
             except RuntimeError as error:
