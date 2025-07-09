@@ -119,7 +119,6 @@ def background_thread():
             plt.build()
             sys.stdout = sys.__stdout__
             plot_output = plot_buffer.getvalue()
-            console.print(Panel(plot_buffer.getvalue(), title="📊 Sensor Trends", border_style="bright_magenta"))
 
             layout = Layout()
             layout.split(
