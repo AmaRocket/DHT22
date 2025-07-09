@@ -67,7 +67,7 @@ def background_thread():
     def sanitize(series):
         return [v if v is not None else 0 for v in series]
 
-    with Live(console=console, refresh_per_second=1, screen=False) as live:
+    with Live(console=console, refresh_per_second=1, screen=True) as live:
         while True:
             # Sensor readings
             in_temp, in_humidity = dht22.get_sensor_readings()
