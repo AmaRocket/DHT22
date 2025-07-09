@@ -40,7 +40,7 @@ pipeline {
 
                             # Check if the systemd service is running and restart it if necessary
                             echo "Installing dependencies"
-                            source dht_env/bin/activate
+                            source ../../dht_env/bin/activate
                             pip install -r requirements.txt
 
                             echo "Restarting DHT22 app via systemd..."
