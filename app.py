@@ -119,11 +119,12 @@ def background_thread():
             plt.build()
             sys.stdout = sys.__stdout__
             plot_output = plot_buffer.getvalue()
+            console.print(Panel(plot_buffer.getvalue(), title="📊 Sensor Trends", border_style="bright_magenta"))
 
             layout = Layout()
             layout.split(
-                Layout(Panel(table, title="📋 Latest Sensor Data"), name="upper", size=10),
-                Layout(Panel(plot_output, title="📊 Sensor Trends"), name="lower")
+                Layout(Panel(table, title="Latest Sensor Data"), name="upper", size=10),
+                Layout(Panel(plot_output, title="Sensor Trends"), name="lower")
             )
 
             live.update(layout)
@@ -135,6 +136,8 @@ def background_thread():
                 "timestamp": datetime.now().isoformat(),
             }
             socketio.emit("updateSensorData", json.dumps(sensor_data))
+
+            console.log(f"[DEBUG] Temp={in_temp}°C Humidity={in_humidity}% Outdoor={out_temp}°C")
 
             socketio.sleep(3)
 
