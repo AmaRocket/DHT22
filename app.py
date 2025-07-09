@@ -118,7 +118,7 @@ def background_thread():
 
         plot_ready = (
                 len(temp_series) == len(humidity_series) == len(outdoor_series) == len(timestamps)
-                and len(temp_series) >= 2
+                and len(temp_series) >= 3  # At least 3 points for safe legend rendering
                 and all(v is not None for v in temp_series + humidity_series + outdoor_series)
         )
 
@@ -130,15 +130,14 @@ def background_thread():
             plt.axes_color('black')
             plt.ticks_color('white')
 
-            x_vals = list(range(len(temp_series)))
-
+            x_vals = list(range(len(temp_series)))  # or: timestamps
             plt.plot(x_vals, temp_series, label="Indoor Temp °C", marker="dot")
             plt.plot(x_vals, humidity_series, label="Humidity %", marker="dot")
             plt.plot(x_vals, outdoor_series, label="Outdoor Temp °C", marker="dot")
             plt.ylim(0, 50)
             plt.show()
         else:
-            console.print("[yellow]Skipping plot: incomplete or mismatched data[/yellow]")
+            console.print("[yellow]Skipping plot: waiting for at least 3 complete data points.[/yellow]")
 
         socketio.sleep(3)
 
