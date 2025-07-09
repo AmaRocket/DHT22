@@ -1,3 +1,5 @@
+import asciichartpy
+
 import io
 import sys
 import json
@@ -62,6 +64,9 @@ MAX_POINTS = 20
 
 
 def background_thread():
+    def sanitize(series):
+        return [v if v is not None else 0 for v in series]
+
     with Live(console=console, refresh_per_second=1, screen=False) as live:
         while True:
             # Sensor readings
@@ -88,7 +93,7 @@ def background_thread():
             if out_temp is not None:
                 outside_temperature.set(out_temp)
 
-            # Prepare table
+            # Table
             table = Table(title="Sensor Readings", expand=True)
             table.add_column("Sensor", style="cyan")
             table.add_column("Value", style="bold")
@@ -96,43 +101,29 @@ def background_thread():
             table.add_row("Indoor Humidity", f"{in_humidity:.1f} %" if in_humidity is not None else "-")
             table.add_row("Outdoor Temp", f"{out_temp:.1f} °C" if out_temp is not None else "-")
 
-            # Prepare plot
-            plt.clear_figure()
-            plt.canvas_color("black")
-            plt.axes_color("black")
-            plt.ticks_color("white")
-            plt.title("Temperature & Humidity Trends")
-
-            x_vals = list(range(len(temp_series)))  # Use numeric x-axis
-
+            # Chart (asciichartpy)
             if len(temp_series) >= 3:
-                plt.plot(x_vals, temp_series, label="Indoor Temp °C", marker="dot", color="red")
-            if len(humidity_series) >= 3:
-                plt.plot(x_vals, humidity_series, label="Humidity %", marker="dot", color="cyan")
-            if len(outdoor_series) >= 3:
-                plt.plot(x_vals, outdoor_series, label="Outdoor Temp °C", marker="dot", color="green")
+                chart_data = [
+                    sanitize(temp_series),
+                    sanitize(humidity_series),
+                    sanitize(outdoor_series),
+                ]
+                colors = [asciichartpy.green, asciichartpy.cyan, asciichartpy.red]
 
-            # Auto-scale Y with margin
-            try:
-                all_values = temp_series + humidity_series + outdoor_series
-                clean_values = [v for v in all_values if v is not None]
-                min_y = min(clean_values)
-                max_y = max(clean_values)
-                plt.ylim(min_y - 2, max_y + 2)
-            except ValueError:
-                pass  # In case of all None
+                plot_output = asciichartpy.plot(chart_data, {
+                    'height': 15,
+                    'colors': colors
+                })
+                label_info = "[green]Indoor Temp[/] | [cyan]Humidity[/] | [red]Outdoor Temp[/]"
+                chart_panel = Panel(label_info + "\n\n" + plot_output, title="📊 Sensor Trends")
+            else:
+                chart_panel = Panel("[yellow]Waiting for data...[/]", title="📊 Sensor Trends")
 
-            # Capture plot output
-            plot_buffer = io.StringIO()
-            sys.stdout = plot_buffer
-            plt.show()
-            sys.stdout = sys.__stdout__
-            plot_output = plot_buffer.getvalue()
-
+            # Layout
             layout = Layout()
             layout.split(
                 Layout(Panel(table, title="📋 Latest Sensor Data"), name="upper", size=10),
-                Layout(Panel(plot_output, title="📊 Sensor Trends"), name="lower")
+                Layout(chart_panel, name="lower")
             )
 
             live.update(layout)
@@ -144,8 +135,6 @@ def background_thread():
                 "timestamp": datetime.now().isoformat(),
             }
             socketio.emit("updateSensorData", json.dumps(sensor_data))
-
-            # console.log(f"[DEBUG] Temp={in_temp}°C Humidity={in_humidity}% Outdoor={out_temp}°C")
 
             socketio.sleep(3)
 
