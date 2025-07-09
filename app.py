@@ -60,7 +60,7 @@ humidity_series = []
 outdoor_series = []
 timestamps = []
 
-MAX_POINTS = 20
+MAX_POINTS = 10
 
 
 def background_thread():
@@ -111,7 +111,7 @@ def background_thread():
                 colors = [asciichartpy.green, asciichartpy.cyan, asciichartpy.red]
 
                 plot_output = asciichartpy.plot(chart_data, {
-                    'height': 15,
+                    'height': 10,
                     'colors': colors
                 })
                 label_info = "[green]Indoor Temp[/] | [cyan]Humidity[/] | [red]Outdoor Temp[/]"
