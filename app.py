@@ -96,7 +96,8 @@ def background_thread():
                 plot_output = itrm.iplot(
                     [sanitize(temp_series), sanitize(humidity_series), sanitize(outdoor_series)],
                     label=["Indoor Temp", "Humidity", "Outdoor Temp"],
-                    overlay=True
+                    overlay=True,
+                    return_string=True
                 )
                 chart_panel = Panel(plot_output, title="📊 Sensor Trends")
             else:
