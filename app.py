@@ -9,6 +9,11 @@ from flask import Flask, Response, render_template, request
 from flask_socketio import SocketIO
 from prometheus_client import CONTENT_TYPE_LATEST, Gauge, generate_latest
 
+from rich.console import Console
+from rich.table import Table
+from rich.progress import Progress, BarColumn, TextColumn, TaskProgressColumn
+from rich.live import Live
+
 if platform.system() == "Linux":
     import board
 
@@ -27,6 +32,7 @@ else:
 
 thread = None
 thread_lock = Lock()
+console = Console()
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "secret"
@@ -52,19 +58,32 @@ def background_thread():
     while True:
         temperature, humidity = dht22_module.get_sensor_readings()
 
-        # Set Prometheus metrics
+        # Prometheus metrics
         if temperature is not None:
             temperature_gauge.set(temperature)
         if humidity is not None:
             humidity_gauge.set(humidity)
 
         sensor_readings = {
-            "temperature": temperature,
-            "humidity": humidity,
+            "temperature": temperature if temperature is not None else -1,
+            "humidity": humidity if humidity is not None else -1,
         }
         sensor_json = json.dumps(sensor_readings)
-
         socketio.emit("updateSensorData", sensor_json)
+
+        # CLI live update
+        console.clear()
+        table = Table(title="Sensor Readings")
+
+        table.add_column("Sensor", style="cyan", no_wrap=True)
+        table.add_column("Value", style="bold")
+
+        table.add_row("Temp", f"{temperature:.1f} °C" if temperature else "-")
+        table.add_row("Humidity", f"{humidity:.1f} %" if humidity else "-")
+
+
+        console.print(table)
+
         socketio.sleep(3)
 
 
