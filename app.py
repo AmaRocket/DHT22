@@ -61,7 +61,7 @@ def background_thread():
         sensor_data = {
             "inside": {
                 "temperature": in_temp if in_temp is not None else -1,
-                "humidity": in_humidity if inside_humidity is not None else -1,
+                "humidity": in_humidity if in_humidity is not None else -1,
             },
             "outside": {
                 "temperature": out_temp if out_temp is not None else -1,

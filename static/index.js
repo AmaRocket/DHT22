@@ -172,9 +172,9 @@ function updateCharts(lineChartDiv, xArray, yArray, sensorRead) {
 }
 
 function updateSensorReadings(jsonResponse) {
-  let temperature = parseFloat(jsonResponse.temperature || -1);
-  let humidity = parseFloat(jsonResponse.humidity || -1);
-  let outTemp = parseFloat(jsonResponse.out_temp || -1);
+  let temperature = parseFloat(jsonResponse.inside?.temperature ?? -1);
+  let humidity = parseFloat(jsonResponse.inside?.humidity ?? -1);
+  let outTemp = parseFloat(jsonResponse.outside?.temperature ?? -1);
 
   updateBoxes(
     temperature >= 0 ? temperature.toFixed(2) : "-",
@@ -187,18 +187,6 @@ function updateSensorReadings(jsonResponse) {
     humidity >= 0 ? humidity : 0,
     outTemp >= 0 ? outTemp : 0
   );
-
-  if (temperature >= 0)
-    updateCharts(temperatureHistoryDiv, newTempXArray, newTempYArray, temperature);
-  if (humidity >= 0)
-    updateCharts(humidityHistoryDiv, newHumidityXArray, newHumidityYArray, humidity);
-  if (outTemp >= 0)
-    updateCharts(outdoorHistoryDiv, newOutdoorXArray, newOutdoorYArray, outTemp);
-
-
-  updateCharts(temperatureHistoryDiv, newTempXArray, newTempYArray, temperature);
-  updateCharts(humidityHistoryDiv, newHumidityXArray, newHumidityYArray, humidity);
-  updateCharts(outdoorHistoryDiv, newOutdoorXArray, newOutdoorYArray, outTemp);
 }
 
 // SocketIO
