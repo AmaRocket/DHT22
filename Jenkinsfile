@@ -42,7 +42,7 @@ pipeline {
                             echo "Installing dependencies"
                             source ../../dht_env/bin/activate
                             pip install -r requirements.txt
-                            source deactivate
+                            deactivate
                             echo "Restarting DHT22 app via systemd..."
                             sudo systemctl reload-or-restart temp-app.service
 
