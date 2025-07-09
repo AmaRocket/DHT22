@@ -96,16 +96,10 @@ def background_thread():
                     sanitize(outdoor_series),
                 ]
 
-                # Capture itrm.iplot() output
                 plot_buffer = io.StringIO()
                 sys.stdout = plot_buffer
                 try:
-                    itrm.iplot(
-                        chart_data,
-                        labels=["Indoor Temp", "Humidity", "Outdoor Temp"],
-                        colors=["green", "cyan", "red"],
-                        overlay=True
-                    )
+                    itrm.iplot(chart_data)
                 except Exception as e:
                     plot_buffer.write(f"[itrm error] {e}")
                 sys.stdout = sys.__stdout__
