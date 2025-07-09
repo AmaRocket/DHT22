@@ -52,10 +52,12 @@ inside_humidity = Gauge("inside_humidity_percent", "Indoor humidity from DHT22")
 outside_temperature = Gauge("outside_temperature_celsius", "Outdoor temperature from DS18B20")
 
 # Store max 120 points (1 hour with 3s interval)
-time_series = deque(maxlen=120)
-temp_series = deque(maxlen=120)
-hum_series = deque(maxlen=120)
-out_series = deque(maxlen=120)
+temp_series = []
+humidity_series = []
+outdoor_series = []
+timestamps = []
+
+MAX_POINTS = 20
 
 
 def background_thread():
@@ -66,10 +68,16 @@ def background_thread():
 
         now = datetime.now().strftime("%H:%M:%S")
         # Save values
-        time_series.append(now)
-        temp_series.append(in_temp if in_temp else 0)
-        hum_series.append(in_humidity if in_humidity else 0)
-        out_series.append(out_temp if out_temp else 0)
+        timestamps.append(now)
+        temp_series.append(in_temp)
+        humidity_series.append(in_humidity)
+        outdoor_series.append(out_temp)
+
+        if len(temp_series) > MAX_POINTS:
+            timestamps.pop(0)
+            temp_series.pop(0)
+            humidity_series.pop(0)
+            outdoor_series.pop(0)
 
         # Prometheus
         if in_temp is not None:
@@ -107,13 +115,15 @@ def background_thread():
         plt.clear_data()
         plt.clear_figure()
         plt.title("Temperature / Humidity (Past Hour)")
-        plt.plot(time_series, temp_series, label="Indoor Temp °C", marker="dot")
-        plt.plot(time_series, hum_series, label="Humidity %", marker="dot")
-        plt.plot(time_series, out_series, label="Outdoor Temp °C", marker="dot")
-        plt.xticks(rotation=90, spacing=10)
+        x_vals = list(range(len(temp_series)))
+        plt.plot(x_vals, temp_series, label="Indoor Temp °C", marker="dot")
+        plt.plot(x_vals, hum_series, label="Humidity %", marker="dot")
+        plt.plot(x_vals, out_series, label="Outdoor Temp °C", marker="dot")
+        plt.ylim(0, 50)
         plt.canvas_color('black')
         plt.axes_color('black')
         plt.ticks_color('white')
+        plt.legend()
         plt.show()
 
         socketio.sleep(3)
